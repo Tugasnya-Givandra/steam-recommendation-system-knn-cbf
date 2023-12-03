@@ -5,11 +5,8 @@ from utils.Model import *
 from utils.utils import *
 from utils.home_utils import *
 
-if 'user_preferences' not in st.session_state:
-    st.session_state['user_preferences'] = {}
-
-
-        # st.write(res)
+if 'user_selection' not in st.session_state:
+    st.session_state['user_selection'] = None
 
 
 st.header("Steam Recommendation System", divider='rainbow')
@@ -32,42 +29,33 @@ st.divider()
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-preferences = st.multiselect(
+title_selected = st.multiselect(
     label="Input games you like:",
     options=get_list_of_games(),
-    key="user_titles"
+    key="user_titles",
+    default=st.session_state['user_selection']
 )
 
-user_input = game_selected(preferences)
+generate_game_boxes(title_selected)
 
-if st.button("Get recommendation"):
-    print(preferences)
-    st.session_state["user_preferences"] = user_input
-
-    if 'result' in st.session_state:
-        del st.session_state['recommendation_list']
-    
+if st.button('Get recommendation'):
+    st.session_state['title_selected'] = title_selected
     with st.spinner("Getting recommendation..."):
-        pref_value = []
-        for id in preferences_id:
-            pref_value.append(int(st.session_state[id] == "Positive"))
+        ids = []
+        is_recommended = []
+
+        for title in title_selected:
+            id = title_to_id[title]
+
+            ids.append(id)
+            is_recommended.append(int(st.session_state[id] == "Positive"))
         
         pred_df = pd.DataFrame({
-            'user_id': [999999] * len(preferences_id),
-            'app_id': preferences_id,
-            'is_recommended': pref_value
+            'app_id': ids,
+            'is_recommended': is_recommended
         })
 
-        items = get_games_dataset()
-        model = KnnCBF(items)
+    st.session_state["selected"] = pred_df
+    st.success("Go to result page from sidebar to view top 10 recommendations.")
 
-        res = model.fit_predict(df_pred=pred_df, k=10)
-        st.dataframe(res)
-        print(res)
-
-    if type(res) == [ValueError, None]:
-        st.error("Recommendation failed. Please select with at least 2 games title.")
-    
-    st.session_state['result'] = res
-
-    nav_to('/Results')
+    # nav_to('/Results')
