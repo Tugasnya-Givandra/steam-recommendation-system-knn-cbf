@@ -24,7 +24,7 @@ def get_list_of_games():
 
 @st.cache_data
 def get_games_dataset():
-    dataset = pd.read_pickle("datasets/clean_games2.pkl")
+    dataset = pd.read_pickle("datasets/clean_games.pkl")
     return dataset
 
 @st.cache_data

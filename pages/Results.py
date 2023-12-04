@@ -25,20 +25,25 @@ if 'selected' not in st.session_state:
 else:
     df_pred = st.session_state['selected']
 
-    # items = get_games_dataset()
     gif_runner = st.image('res/miyano.gif', width=800)
-    model = KnnCBFUser()
-    s_app_id = model.fit_predict(df_pred)
-    s_app_id = pd.Series(s_app_id)
+    # Untuk user based
+    # model = KnnCBFUser()
+    # s_app_id = model.fit_predict(df_pred)
+    # s_app_id = pd.Series(s_app_id)
 
-    gif_runner.empty()
     # title = s_app_id.apply(lambda x: id_to_title[x])
-    generate_res_gameboxes(s_app_id)
 
+    # 
+    items = get_games_dataset()
+    model  = KnnCBF(items)
 
-    # res = model.fit_predict(df_pred=pred_df, k=10)
+    res = model.fit_predict(df_pred=df_pred, k=10)
+    s_app_id = res['app_id']
     # if type(res) == [ValueError, None]:
     # st.error("Gagal membuat rekomendasi...")
 
     #  st.success(f"Top {len(st.session_state['input'])}")
     # generate_res_gameboxes(st.session_state['rs'])
+
+    gif_runner.empty()
+    generate_res_gameboxes(s_app_id)
