@@ -23,8 +23,12 @@ def get_list_of_games():
 
 @st.cache_data
 def get_games_dataset():
-    dataset = pd.read_pickle("datasets/clean_games.pkl")
+    dataset = pd.read_pickle("datasets/clean_games2.pkl")
     return dataset
+
+@st.cache_data
+def get_recommendation_dataset():
+    return pd.read_csv('datasets/archive/recommendations.csv')
 
 def nav_to(url):
     nav_script = """

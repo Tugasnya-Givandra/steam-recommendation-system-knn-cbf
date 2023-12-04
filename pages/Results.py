@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from utils.Model import KnnCBF
+from utils.Model import KnnCBF, KnnCBFUser
 from utils.utils import *
 
 from io import BytesIO
@@ -25,13 +25,16 @@ if 'selected' not in st.session_state:
 else:
     df_pred = st.session_state['selected']
 
-    items = get_games_dataset()
-    model = KnnCBF(items)
-    df_res = model.fit_predict(df_pred, k=10)
+    # items = get_games_dataset()
+    gif_runner = st.image('res/miyano.gif', width=800)
+    model = KnnCBFUser()
+    s_app_id = model.fit_predict(df_pred)
+    s_app_id = pd.Series(s_app_id)
 
-    generate_res_gameboxes(df_res['app_id'])
+    gif_runner.empty()
+    # title = s_app_id.apply(lambda x: id_to_title[x])
+    generate_res_gameboxes(s_app_id)
 
-    # st.dataframe(df_res)
 
     # res = model.fit_predict(df_pred=pred_df, k=10)
     # if type(res) == [ValueError, None]:
