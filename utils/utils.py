@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import requests
+from sklearn.datasets import load_wine
 
 from io import BytesIO
 from PIL import Image
@@ -29,6 +30,10 @@ def get_games_dataset():
 @st.cache_data
 def get_recommendation_dataset():
     return pd.read_csv('datasets/archive/recommendations.csv')
+
+@st.cache_data
+def get_wine_dataset():
+    return load_wine()
 
 def nav_to(url):
     nav_script = """
